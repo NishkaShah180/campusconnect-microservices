@@ -2,9 +2,9 @@ services:
   # 1. API Gateway (Public Web Service Entry Point)
   - type: web
     name: campusconnect-api-gateway
-    env: docker
-    dockerContext: api-gateway
-    dockerfilePath: api-gateway/Dockerfile
+    runtime: docker
+    dockerContext: ./api-gateway
+    dockerfilePath: ./api-gateway/Dockerfile
     plan: free
     region: singapore
     envVars:
@@ -29,9 +29,9 @@ services:
   # 2. User Service (Render Web Service - Free Tier Fallback)
   - type: web
     name: campusconnect-user-service
-    env: docker
-    dockerContext: user-service
-    dockerfilePath: user-service/Dockerfile
+    runtime: docker
+    dockerContext: ./user-service
+    dockerfilePath: ./user-service/Dockerfile
     plan: free
     region: singapore
     envVars:
@@ -41,9 +41,9 @@ services:
   # 3. Product Service (Render Web Service - Free Tier Fallback)
   - type: web
     name: campusconnect-product-service
-    env: docker
-    dockerContext: product-service
-    dockerfilePath: product-service/Dockerfile
+    runtime: docker
+    dockerContext: ./product-service
+    dockerfilePath: ./product-service/Dockerfile
     plan: free
     region: singapore
     envVars:
@@ -53,9 +53,9 @@ services:
   # 4. Order Service (Render Web Service - Free Tier Fallback)
   - type: web
     name: campusconnect-order-service
-    env: docker
-    dockerContext: order-service
-    dockerfilePath: order-service/Dockerfile
+    runtime: docker
+    dockerContext: ./order-service
+    dockerfilePath: ./order-service/Dockerfile
     plan: free
     region: singapore
     envVars:
