@@ -25,52 +25,18 @@ Lab 6 and Lab 7 represent the complete evolution of the **CampusConnect** backen
 
 ## 3. Architecture Overview
 
-### Lab 6 Architecture (Direct Service Exposure)
+### Local / Target Architecture (API Gateway + Isolated Network)
 ```
-Client / Postman ────> User Service (:3001)
-Client / Postman ────> Product Service (:3002)
-Client / Postman ────> Order Service (:3003)
+Client / Postman ────> API Gateway (:3000) ────> user-service:3001 (campus-network)
+                                            ────> product-service:3002 (campus-network)
+                                            ────> order-service:3003 (campus-network)
 ```
 
-### Lab 7 Architecture (API Gateway + Configuration-Based Discovery)
-
-```mermaid
-flowchart TD
-    subgraph External ["External / Host Machine"]
-        Client["Client / Postman"]
-    end
-
-    subgraph GatewayLayer ["Gateway & Configuration Layer"]
-        Gateway["API Gateway<br/>Port: 3000<br/>/health, /users, /products, /orders"]
-        Config["Environment Configuration<br/>USER_SERVICE_URL<br/>PRODUCT_SERVICE_URL<br/>ORDER_SERVICE_URL"]
-    end
-
-    subgraph DockerNetwork ["Isolated Docker Network: campus-network"]
-        US["user-service<br/>Internal Port: 3001"]
-        PS["product-service<br/>Internal Port: 3002"]
-        OS["order-service<br/>Internal Port: 3003"]
-    end
-
-    subgraph DataStorage ["Data Layer"]
-        DB["In-Memory Data Store<br/>(Optional Mongo Atlas support via MONGO_URI)"]
-    end
-
-    %% External Entry Point
-    Client -->|"http://localhost:3000"| Gateway
-    Config -.->|"Injects targets on startup"| Gateway
-
-    %% Proxied Routes
-    Gateway -->|"/users/* → http://user-service:3001"| US
-    Gateway -->|"/products/* → http://product-service:3002"| PS
-    Gateway -->|"/orders/* → http://order-service:3003"| OS
-
-    %% Internal Communication (Order Service checks Users & Products directly)
-    OS -->|"GET http://user-service:3001/users/:id"| US
-    OS -->|"GET http://product-service:3002/products/:id"| PS
-
-    US --> DB
-    PS --> DB
-    OS --> DB
+### Cloud Free-Tier Fallback Architecture (Render Web Services + MongoDB Atlas)
+```
+Client / Postman ────> Public API Gateway ────> Render Web User Service ────> MongoDB Atlas
+                                          ────> Render Web Product Service ──> MongoDB Atlas
+                                          ────> Render Web Order Service ────> MongoDB Atlas
 ```
 
 ---
@@ -189,23 +155,25 @@ docker compose down
 
 ---
 
-## 11. Cloud Deployment Configuration & Notes
+## 11. Cloud Deployment & Free-Tier Fallback Strategy
 
-### Platform Selection: Render / Railway Ready
-* **Selected Architecture**: Container-based cloud deployment using Render (`render.yaml`).
-* **Service Blueprint**:
-  * `api-gateway`: Public web service exposing HTTP port `3000`.
-  * `user-service`: Private service / internal web service.
-  * `product-service`: Private service / internal web service.
-  * `order-service`: Private service / internal web service.
-* **Environment Configuration**: Injected target URLs via environment variables (`USER_SERVICE_URL`, `PRODUCT_SERVICE_URL`, `ORDER_SERVICE_URL`).
+### Free-Tier Platform Limitation:
+Render does not offer free-tier instances for Private Services (`pserv`). When attempting to deploy private isolated services on Render's free plan, Render rejects `pserv` declarations.
+
+### Free-Tier Adaptation Strategy:
+To deploy all four microservices on the Render free tier without upgrading plans or providing payment cards:
+1. **Service Type Adjustment**: All four services (`api-gateway`, `user-service`, `product-service`, `order-service`) are declared as **Render Web Services** (`type: web`) in `render.yaml`.
+2. **Environment Variable Service Linking**: Render dynamically links web service locations via `fromService: host`.
+3. **Public Gateway Client Entry**: Client/Postman traffic interacts exclusively with the public API Gateway (`https://campusconnect-api-gateway.onrender.com`).
+4. **Zero Code Changes**: The node microservices read target URLs directly from `USER_SERVICE_URL`, `PRODUCT_SERVICE_URL`, and `ORDER_SERVICE_URL` environment variables, preserving exact local Docker Compose parity.
 
 ---
 
 ## 12. MongoDB Atlas Implementation Status
 
-* **Status**: Both Lab 6 and Lab 7 microservices natively support MongoDB Atlas via `MONGO_URI`.
+* **Status**: Microservices natively support MongoDB Atlas via `MONGO_URI`.
 * **Behavior**: If `MONGO_URI` is supplied in environment variables, services connect to Atlas Mongoose schemas. If `MONGO_URI` is omitted, services automatically operate in robust **in-memory data store mode** without crashing.
+* **Credentials**: Production Atlas connection strings are injected via Render environment variables and never committed to source code or `render.yaml`.
 
 ---
 
