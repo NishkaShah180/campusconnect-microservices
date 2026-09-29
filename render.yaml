@@ -14,17 +14,17 @@ services:
         fromService:
           type: web
           name: campusconnect-user-service
-          property: hostport
+          envVarKey: RENDER_EXTERNAL_URL
       - key: PRODUCT_SERVICE_URL
         fromService:
           type: web
           name: campusconnect-product-service
-          property: hostport
+          envVarKey: RENDER_EXTERNAL_URL
       - key: ORDER_SERVICE_URL
         fromService:
           type: web
           name: campusconnect-order-service
-          property: hostport
+          envVarKey: RENDER_EXTERNAL_URL
 
   # 2. User Service (Render Web Service - Free Tier Fallback)
   - type: web
@@ -65,9 +65,9 @@ services:
         fromService:
           type: web
           name: campusconnect-user-service
-          property: hostport
+          envVarKey: RENDER_EXTERNAL_URL
       - key: PRODUCT_SERVICE_URL
         fromService:
           type: web
           name: campusconnect-product-service
-          property: hostport
+          envVarKey: RENDER_EXTERNAL_URL
