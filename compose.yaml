@@ -1,0 +1,54 @@
+services:
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - USER_SERVICE_URL=http://user-service:3001
+      - PRODUCT_SERVICE_URL=http://product-service:3002
+      - ORDER_SERVICE_URL=http://order-service:3003
+    depends_on:
+      - user-service
+      - product-service
+      - order-service
+    networks:
+      - campus-network
+
+  user-service:
+    build: ./user-service
+    container_name: user-service
+    environment:
+      - USER_SERVICE_PORT=3001
+      - PORT=3001
+    networks:
+      - campus-network
+
+  product-service:
+    build: ./product-service
+    container_name: product-service
+    environment:
+      - PRODUCT_SERVICE_PORT=3002
+      - PORT=3002
+    networks:
+      - campus-network
+
+  order-service:
+    build: ./order-service
+    container_name: order-service
+    environment:
+      - ORDER_SERVICE_PORT=3003
+      - PORT=3003
+      - USER_SERVICE_URL=http://user-service:3001
+      - PRODUCT_SERVICE_URL=http://product-service:3002
+    depends_on:
+      - user-service
+      - product-service
+    networks:
+      - campus-network
+
+networks:
+  campus-network:
+    name: campus-network
+    external: true

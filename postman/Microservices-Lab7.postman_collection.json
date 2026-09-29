@@ -1,0 +1,250 @@
+{
+	"info": {
+		"_postman_id": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+		"name": "Microservices – Lab 7",
+		"description": "Postman Collection for Lab 7 API Gateway, Service Discovery, and Cloud Deployment Testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "gateway_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "cloud_gateway_url",
+			"value": "https://your-api-gateway.onrender.com",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "LOCAL GATEWAY",
+			"item": [
+				{
+					"name": "GET Gateway Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/health",
+							"host": ["{{gateway_url}}"],
+							"path": ["health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Users via Gateway",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/users",
+							"host": ["{{gateway_url}}"],
+							"path": ["users"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET User by ID via Gateway",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/users/usr_101",
+							"host": ["{{gateway_url}}"],
+							"path": ["users", "usr_101"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Products via Gateway",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/products",
+							"host": ["{{gateway_url}}"],
+							"path": ["products"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Product by ID via Gateway",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/products/prd_501",
+							"host": ["{{gateway_url}}"],
+							"path": ["products", "prd_501"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Orders via Gateway",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/orders",
+							"host": ["{{gateway_url}}"],
+							"path": ["orders"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Create Order Success via Gateway",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"usr_101\",\n  \"productId\": \"prd_501\",\n  \"quantity\": 2\n}"
+						},
+						"url": {
+							"raw": "{{gateway_url}}/orders",
+							"host": ["{{gateway_url}}"],
+							"path": ["orders"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ERROR TESTS",
+			"item": [
+				{
+					"name": "GET Invalid User ID via Gateway (404)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/users/usr_999",
+							"host": ["{{gateway_url}}"],
+							"path": ["users", "usr_999"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Invalid Product ID via Gateway (404)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/products/prd_999",
+							"host": ["{{gateway_url}}"],
+							"path": ["products", "prd_999"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Unreachable Service (503 Service Unavailable)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/users",
+							"host": ["{{gateway_url}}"],
+							"path": ["users"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CLOUD GATEWAY",
+			"item": [
+				{
+					"name": "GET Public Gateway Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{cloud_gateway_url}}/health",
+							"host": ["{{cloud_gateway_url}}"],
+							"path": ["health"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Public Users via Gateway",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{cloud_gateway_url}}/users",
+							"host": ["{{cloud_gateway_url}}"],
+							"path": ["users"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Public Products via Gateway",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{cloud_gateway_url}}/products",
+							"host": ["{{cloud_gateway_url}}"],
+							"path": ["products"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Public Orders via Gateway",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{cloud_gateway_url}}/orders",
+							"host": ["{{cloud_gateway_url}}"],
+							"path": ["orders"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Public Create Order via Gateway",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"usr_101\",\n  \"productId\": \"prd_501\",\n  \"quantity\": 2\n}"
+						},
+						"url": {
+							"raw": "{{cloud_gateway_url}}/orders",
+							"host": ["{{cloud_gateway_url}}"],
+							"path": ["orders"]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
