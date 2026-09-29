@@ -164,7 +164,7 @@ Render does not offer free-tier instances for Private Services (`pserv`). When a
 To deploy all four microservices on the Render free tier without upgrading plans or providing payment cards:
 1. **Service Type Adjustment**: All four services (`api-gateway`, `user-service`, `product-service`, `order-service`) are declared as **Render Web Services** (`type: web`) in `render.yaml`.
 2. **Environment Variable Service Linking**: Render dynamically links web service locations via `fromService: host`.
-3. **Public Gateway Client Entry**: Client/Postman traffic interacts exclusively with the public API Gateway (`https://campusconnect-api-gateway.onrender.com`).
+3. **Public Gateway Client Entry**: Client/Postman traffic interacts exclusively with the public API Gateway (`https://campusconnect-api-gateway-fv37.onrender.com`).
 4. **Zero Code Changes**: The node microservices read target URLs directly from `USER_SERVICE_URL`, `PRODUCT_SERVICE_URL`, and `ORDER_SERVICE_URL` environment variables, preserving exact local Docker Compose parity.
 
 ---

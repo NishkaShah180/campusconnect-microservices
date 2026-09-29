@@ -13,7 +13,7 @@
 		},
 		{
 			"key": "cloud_gateway_url",
-			"value": "https://your-api-gateway.onrender.com",
+			"value": "https://campusconnect-api-gateway-fv37.onrender.com",
 			"type": "string"
 		}
 	],
