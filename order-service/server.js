@@ -5,9 +5,18 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
+const formatUrl = (url) => {
+    if (!url) return url;
+    const trimmed = url.trim();
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+        return trimmed;
+    }
+    return `http://${trimmed}`;
+};
+
 const PORT = process.env.ORDER_SERVICE_PORT || process.env.PORT || 3003;
-const USER_SERVICE_URL = process.env.USER_SERVICE_URL || 'http://user-service:3001';
-const PRODUCT_SERVICE_URL = process.env.PRODUCT_SERVICE_URL || 'http://product-service:3002';
+const USER_SERVICE_URL = formatUrl(process.env.USER_SERVICE_URL) || 'http://user-service:3001';
+const PRODUCT_SERVICE_URL = formatUrl(process.env.PRODUCT_SERVICE_URL) || 'http://product-service:3002';
 
 // Enable CORS and JSON parser middleware
 app.use(cors());

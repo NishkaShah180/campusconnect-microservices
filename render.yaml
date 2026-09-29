@@ -3,8 +3,8 @@ services:
   - type: web
     name: campusconnect-api-gateway
     env: docker
-    dockerContext: .
-    dockerfilePath: ./api-gateway/Dockerfile
+    dockerContext: ./api-gateway
+    dockerfilePath: Dockerfile
     plan: free
     region: singapore
     envVars:
@@ -12,26 +12,26 @@ services:
         value: 10000
       - key: USER_SERVICE_URL
         fromService:
-          type: web
+          type: pserv
           name: campusconnect-user-service
-          property: host
+          property: hostport
       - key: PRODUCT_SERVICE_URL
         fromService:
-          type: web
+          type: pserv
           name: campusconnect-product-service
-          property: host
+          property: hostport
       - key: ORDER_SERVICE_URL
         fromService:
-          type: web
+          type: pserv
           name: campusconnect-order-service
-          property: host
+          property: hostport
 
   # 2. User Service (Private Web Service)
   - type: pserv
     name: campusconnect-user-service
     env: docker
-    dockerContext: .
-    dockerfilePath: ./user-service/Dockerfile
+    dockerContext: ./user-service
+    dockerfilePath: Dockerfile
     plan: free
     region: singapore
     envVars:
@@ -42,8 +42,8 @@ services:
   - type: pserv
     name: campusconnect-product-service
     env: docker
-    dockerContext: .
-    dockerfilePath: ./product-service/Dockerfile
+    dockerContext: ./product-service
+    dockerfilePath: Dockerfile
     plan: free
     region: singapore
     envVars:
@@ -54,8 +54,8 @@ services:
   - type: pserv
     name: campusconnect-order-service
     env: docker
-    dockerContext: .
-    dockerfilePath: ./order-service/Dockerfile
+    dockerContext: ./order-service
+    dockerfilePath: Dockerfile
     plan: free
     region: singapore
     envVars:
@@ -65,9 +65,9 @@ services:
         fromService:
           type: pserv
           name: campusconnect-user-service
-          property: host
+          property: hostport
       - key: PRODUCT_SERVICE_URL
         fromService:
           type: pserv
           name: campusconnect-product-service
-          property: host
+          property: hostport

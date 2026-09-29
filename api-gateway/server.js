@@ -22,10 +22,19 @@ app.use(morgan((tokens, req, res) => {
     ].join(' ');
 }));
 
+const formatUrl = (url) => {
+    if (!url) return url;
+    const trimmed = url.trim();
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+        return trimmed;
+    }
+    return `http://${trimmed}`;
+};
+
 const services = {
-    user: process.env.USER_SERVICE_URL,
-    product: process.env.PRODUCT_SERVICE_URL,
-    order: process.env.ORDER_SERVICE_URL
+    user: formatUrl(process.env.USER_SERVICE_URL),
+    product: formatUrl(process.env.PRODUCT_SERVICE_URL),
+    order: formatUrl(process.env.ORDER_SERVICE_URL)
 };
 
 app.get('/health', (req, res) => {
