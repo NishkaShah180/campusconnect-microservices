@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # API Gateway
+      - name: Install dependencies (API Gateway)
+        working-directory: ./api-gateway
+        run: npm ci || npm install
+      - name: Run tests (API Gateway)
+        working-directory: ./api-gateway
+        run: npm test --if-present
+      - name: Build Docker image (API Gateway)
+        run: docker build -t campusconnect-api-gateway:${{ github.sha }} ./api-gateway
+
+      # User Service
+      - name: Install dependencies (User Service)
+        working-directory: ./user-service
+        run: npm ci || npm install
+      - name: Run tests (User Service)
+        working-directory: ./user-service
+        run: npm test --if-present
+      - name: Build Docker image (User Service)
+        run: docker build -t campusconnect-user-service:${{ github.sha }} ./user-service
+
+      # Product Service
+      - name: Install dependencies (Product Service)
+        working-directory: ./product-service
+        run: npm ci || npm install
+      - name: Run tests (Product Service)
+        working-directory: ./product-service
+        run: npm test --if-present
+      - name: Build Docker image (Product Service)
+        run: docker build -t campusconnect-product-service:${{ github.sha }} ./product-service
+
+      # Order Service
+      - name: Install dependencies (Order Service)
+        working-directory: ./order-service
+        run: npm ci || npm install
+      - name: Run tests (Order Service)
+        working-directory: ./order-service
+        run: npm test --if-present
+      - name: Build Docker image (Order Service)
+        run: docker build -t campusconnect-order-service:${{ github.sha }} ./order-service
