@@ -223,3 +223,5 @@ Since screenshots are captured manually, use this checklist to capture evidence:
 - [ ] **12. Unreachable Service 503**: Postman GET `http://localhost:3000/users` returning 503 when `user-service` is stopped.
 - [ ] **13. Service Discovery Proof**: Logs showing gateway routing to `user-service-alt` when `USER_SERVICE_URL` environment variable was updated.
 - [ ] **14. Postman Collection**: Postman UI showing `Microservices – Lab 7` collection structure.
+
+<!-- CI Test Change -->
